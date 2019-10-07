@@ -17,8 +17,13 @@ import {RecipeStartComponent} from './recepies/recipe-start/recipe-start.compone
 import { RecipeEditComponent } from './recepies/recipe-edit/recipe-edit.component';
 import {RecipeService} from './recepies/recipe.service';
 import {DataStorageService} from './shared/data-storage.service';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { RecipesResolveService } from './recepies/recipes-resolve.service';
+import {AuthComponent} from './auth/auth.component';
+import {AuthService} from './auth/auth.service';
+import {LoadingSpinnerComponent} from './shared/loading-spinner/loading-spinner.component';
+import {AuthInterceptorService} from './auth/auth-interceptor.service';
+import {AuthGuard} from './auth/auth.guard';
 
 @NgModule({
   declarations: [
@@ -32,16 +37,19 @@ import { RecipesResolveService } from './recepies/recipes-resolve.service';
     RecipeListComponent,
     DropdownDirective,
     RecipeStartComponent,
-    RecipeEditComponent
+    RecipeEditComponent,
+    AuthComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [ShoppingListService, RecipeService, DataStorageService, RecipesResolveService],
+  // tslint:disable-next-line:max-line-length
+  providers: [ShoppingListService, RecipeService, DataStorageService, RecipesResolveService, AuthService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
